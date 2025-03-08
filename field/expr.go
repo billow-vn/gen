@@ -28,6 +28,7 @@ type Expr interface {
 	BuildColumn(*gorm.Statement, ...BuildOpt) sql
 	BuildWithArgs(*gorm.Statement) (query sql, args []interface{})
 	RawExpr() expression
+	Column() clause.Column
 
 	// col operate expression
 	AddCol(col Expr) Expr
@@ -145,6 +146,10 @@ func (e expr) RawExpr() expression {
 		return e.col
 	}
 	return e.e
+}
+
+func (e expr) Column() clause.Column {
+	return e.col
 }
 
 func (e expr) setE(expression clause.Expression) expr {

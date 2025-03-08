@@ -15,6 +15,11 @@ type ScanValuer interface {
 // Field a standard field struct
 type Field struct{ expr }
 
+// Expr judge assign raw expr
+func (field Field) Expr(exprAssigned clause.Expr) Expr {
+	return expr{e: exprAssigned}
+}
+
 // Eq judge equal
 func (field Field) Eq(value driver.Valuer) Expr {
 	return expr{e: clause.Eq{Column: field.RawExpr(), Value: value}}
