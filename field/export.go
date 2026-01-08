@@ -49,6 +49,14 @@ func NewUnsafeFieldRaw(rawSQL string, vars ...interface{}) Field {
 	return Field{expr: expr{e: clause.Expr{SQL: rawSQL, Vars: vars}}}
 }
 
+// NewExprField create new expr field
+func NewExprField(column string, exprAssign clause.Expr) Field {
+	return Field{expr: expr{
+		col: clause.Column{Name: column},
+		e:   clause.Expr{SQL: "? AS ?", Vars: []interface{}{exprAssign, clause.Column{Name: column}}},
+	}}
+}
+
 // NewSerializer create new field2
 func NewSerializer(table, column string, opts ...Option) Serializer {
 	return Serializer{expr: expr{col: toColumn(table, column, opts...)}}
