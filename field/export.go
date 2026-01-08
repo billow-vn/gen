@@ -49,68 +49,12 @@ func NewUnsafeFieldRaw(rawSQL string, vars ...interface{}) Field {
 	return Field{expr: expr{e: clause.Expr{SQL: rawSQL, Vars: vars}}}
 }
 
-type FieldTypes interface {
-	String | Bool | Bytes | Time
-	Int | Int8 | Int16 | Int32 | Int64 |
-	Uint | Uint8 | Uint16 | Uint32 | Uint64 |
-	Float32 | Float64 |
-	Serializer
-}
-
 // NewExprField create new expr field
 func NewExprField(column string, exprAssign clause.Expr) Field {
 	return Field{expr: expr{
 		col: clause.Column{Name: column},
 		e:   clause.Expr{SQL: "? AS ?", Vars: []interface{}{exprAssign, clause.Column{Name: column}}},
 	}}
-}
-
-// NewExprBy create new expr by type
-func NewExprBy[T FieldTypes](column string, exprAssign clause.Expr) T {
-	fieldExpr := expr{col: clause.Column{Name: column}, e: exprAssign}
-	switch any(*new(T)).(type) {
-	case String:
-		return interface{}(String{expr: fieldExpr}).(T)
-	case Bool:
-		return any(Bool{expr: fieldExpr}).(T)
-	case Bytes:
-		return any(Bytes{expr: fieldExpr}).(T)
-	case Time:
-		return any(Time{expr: fieldExpr}).(T)
-	case Int:
-		return any(Int{expr: fieldExpr}).(T)
-	case Int8:
-		return any(Int8{expr: fieldExpr}).(T)
-	case Int16:
-		return any(Int16{expr: fieldExpr}).(T)
-	case Int32:
-		return any(Int32{expr: fieldExpr}).(T)
-	case Int64:
-		return any(Int64{expr: fieldExpr}).(T)
-	case Uint:
-		return any(Uint{expr: fieldExpr}).(T)
-	case Uint8:
-		return any(Uint8{expr: fieldExpr}).(T)
-	case Uint16:
-		return any(Uint16{expr: fieldExpr}).(T)
-	case Uint32:
-		return any(Uint32{expr: fieldExpr}).(T)
-	case Uint64:
-		return any(Uint64{expr: fieldExpr}).(T)
-	case Float32:
-		return any(Float32{expr: fieldExpr}).(T)
-	case Float64:
-		return any(Float64{expr: fieldExpr}).(T)
-	case Serializer:
-		return any(Serializer{expr: fieldExpr}).(T)
-	default:
-		panic(fmt.Sprintf("Unsupported type: %T", *new(T)))
-	}
-}
-
-// NewExpr create new expr
-func NewExpr(exprAssign clause.Expr) Expr {
-	return expr{e: exprAssign}
 }
 
 // NewSerializer create new field2
