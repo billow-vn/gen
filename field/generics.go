@@ -23,6 +23,11 @@ func (field genericsField[T]) Neq(value T) Expr {
 	return expr{e: clause.Neq{Column: field.RawExpr(), Value: value}}
 }
 
+// Expr judge assign raw expr
+func (field genericsField[T]) Expr(exprAssigned clause.Expr) Expr {
+	return expr{e: exprAssigned}
+}
+
 // In ...
 func (field genericsField[T]) In(values ...T) Expr {
 	return expr{e: clause.IN{Column: field.RawExpr(), Values: field.toSlice(values...)}}
